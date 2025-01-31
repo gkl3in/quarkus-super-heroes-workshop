@@ -14,7 +14,7 @@ class VillainResourceTest {
           .when().get("/api/villains")
           .then()
              .statusCode(200)
-             .body(is("Hello from Quarkus REST"));
+             .body(is("Hello Villain Resource"));
     }
 
 }
