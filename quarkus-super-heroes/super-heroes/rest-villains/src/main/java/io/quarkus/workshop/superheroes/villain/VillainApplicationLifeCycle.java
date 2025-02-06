@@ -19,6 +19,8 @@ public class VillainApplicationLifeCycle {
         LOGGER.info("  |  < | |/ _ \\ | '_ \\      / /\\ \\ |  ___/ | |  ");
         LOGGER.info("  | . \\| |  __/ | | | |    / ____ \\| |    _| |_ ");
         LOGGER.info("  |_|\\_\\_|\\___|_|_| |_|   /_/    \\_\\_|   |_____|");
+
+        LOGGER.info("The application VILLAIN is starting with profile " + ConfigUtils.getProfiles());
     }
 
     void onStop(@Observes ShutdownEvent ev) {
