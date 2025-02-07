@@ -2,6 +2,7 @@ package io.quarkus.workshop.superheroes.fight;
 
 import jakarta.ws.rs.*;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.jboss.logging.Logger;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -21,6 +22,9 @@ import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 @ApplicationScoped
 public class FightResource {
 
+    @ConfigProperty(name = "process.milliseconds", defaultValue = "0")
+    long tooManyMilliseconds;
+
     @Inject
     Logger logger;
 
@@ -30,7 +34,9 @@ public class FightResource {
 
     @GET
     @Path("/randomfighters")
+    @Timeout(500)
     public Response getRandomFighters() {
+        veryLongProcess();
         Fighters fighters = service.findRandomFighters();
         logger.debug("Get random fighters " + fighters);
         return Response.ok(fighters).build();
@@ -68,4 +74,11 @@ public class FightResource {
         return "Hello Fight Resource";
     }
 
+    private void veryLongProcess() {
+        try {
+            Thread.sleep(tooManyMilliseconds);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
 }
