@@ -29,7 +29,6 @@ public class HeroContractVerificationTest {
 
 	private static final String NO_HERO_FOUND_STATE = "No random hero found";
 
-
     @BeforeEach
     void beforeEach(PactVerificationContext context) {
         context.setTarget(new HttpTestTarget("localhost", this.quarkusPort));
