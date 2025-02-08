@@ -33,10 +33,10 @@ public class SemanticKernelNarrationService implements NarrationService {
     public String narrate(Fight fight) throws Exception {
 
         OpenAIAsyncClient client = getClient();
-        TextCompletion textCompletion = SKBuilders.chatCompletion().withOpenAIClient(client).withModelId("gpt35turbo").build();
+        TextCompletion textCompletion = SKBuilders.chatCompletion().withOpenAIClient(client).withModelId("gpt-3.5-turbo").build();
         Kernel kernel = SKBuilders.kernel().withDefaultAIService(textCompletion).build();
 
-        ReadOnlyFunctionCollection skill = kernel.importSkillFromResources("", "NarrationSkill", "NarrateFight");
+        ReadOnlyFunctionCollection skill = kernel.importSkillFromDirectory("NarrationSkill", "src/main/resources");
         CompletionSKFunction fightFunction = skill.getFunction("NarrateFight", CompletionSKFunction.class);
 
         SKContext fightContext = SKBuilders.context().build();
