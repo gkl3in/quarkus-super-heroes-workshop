@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
+import java.time.Instant;
 import java.util.List;
 
 import java.util.Random;
@@ -26,6 +27,7 @@ import static io.restassured.RestAssured.given;
 import static jakarta.ws.rs.core.HttpHeaders.ACCEPT;
 import static jakarta.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 import static jakarta.ws.rs.core.Response.Status.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -189,5 +191,30 @@ public class FightResourceTest {
         assertEquals(villain.picture, DefaultTestVillain.DEFAULT_VILLAIN_PICTURE);
         assertEquals(villain.level, DefaultTestVillain.DEFAULT_VILLAIN_LEVEL);
         assertEquals(villain.powers, DefaultTestVillain.DEFAULT_VILLAIN_POWERS);
+    }
+
+    @Test
+    void shouldNarrate() {
+        Fight fight = new Fight();
+        fight.fightDate = Instant.now();
+        fight.winnerName = DEFAULT_WINNER_NAME;
+        fight.winnerLevel = DEFAULT_WINNER_LEVEL;
+        fight.winnerPowers = DEFAULT_WINNER_POWERS;
+        fight.winnerPicture = DEFAULT_WINNER_PICTURE;
+        fight.loserName = DEFAULT_LOSER_NAME;
+        fight.loserLevel = DEFAULT_LOSER_LEVEL;
+        fight.loserPowers = DEFAULT_LOSER_POWERS;
+        fight.loserPicture = DEFAULT_LOSER_PICTURE;
+        fight.winnerTeam = "villains";
+        fight.loserTeam = "heroes";
+
+        given().body(fight)
+            .header(CONTENT_TYPE, APPLICATION_JSON)
+            .header(ACCEPT, TEXT_PLAIN)
+            .when()
+            .post("/api/fights/narrate")
+            .then()
+            .statusCode(CREATED.getStatusCode())
+            .body(startsWith("Lorem ipsum dolor sit amet"));
     }
 }

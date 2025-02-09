@@ -6,6 +6,7 @@ import org.jboss.logging.Logger;
 
 import io.quarkus.workshop.superheroes.fight.client.Hero;
 import io.quarkus.workshop.superheroes.fight.client.HeroProxy;
+import io.quarkus.workshop.superheroes.fight.client.NarrationProxy;
 import io.quarkus.workshop.superheroes.fight.client.Villain;
 import io.quarkus.workshop.superheroes.fight.client.VillainProxy;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -27,6 +28,7 @@ public class FightService {
 
     @RestClient HeroProxy heroProxy;
     @RestClient VillainProxy villainProxy;
+    @RestClient NarrationProxy narrationProxy;
 
     private final Random random = new Random();
 
@@ -38,24 +40,24 @@ public class FightService {
         return Fight.findById(id);
     }
 
-Fighters findRandomFighters() {
-    Hero hero = findRandomHero();
-    Villain villain = findRandomVillain();
-    Fighters fighters = new Fighters();
-    fighters.hero = hero;
-    fighters.villain = villain;
-    return fighters;
-}
+    Fighters findRandomFighters() {
+        Hero hero = findRandomHero();
+        Villain villain = findRandomVillain();
+        Fighters fighters = new Fighters();
+        fighters.hero = hero;
+        fighters.villain = villain;
+        return fighters;
+    }
 
-@Fallback(fallbackMethod = "fallbackRandomVillain")
-Villain findRandomVillain() {
-    return villainProxy.findRandomVillain();
-}
+    @Fallback(fallbackMethod = "fallbackRandomVillain")
+    Villain findRandomVillain() {
+        return villainProxy.findRandomVillain();
+    }
 
-@Fallback(fallbackMethod = "fallbackRandomHero")
-Hero findRandomHero() {
-   return heroProxy.findRandomHero();
-}
+    @Fallback(fallbackMethod = "fallbackRandomHero")
+    Hero findRandomHero() {
+        return heroProxy.findRandomHero();
+    }
 
     @Transactional(REQUIRED)
     public Fight persistFight(Fighters fighters) {
@@ -98,6 +100,10 @@ Hero findRandomHero() {
         villain.level = 42;
         return villain;
     }
+    
+    public String narrateFight(Fight fight) {
+        return narrationProxy.narrate(fight);
+    }
 
     private Fight heroWon(Fighters fighters) {
         logger.info("Yes, Hero won :o)");
@@ -130,5 +136,4 @@ Hero findRandomHero() {
         fight.loserTeam = "heroes";
         return fight;
     }
-
 }

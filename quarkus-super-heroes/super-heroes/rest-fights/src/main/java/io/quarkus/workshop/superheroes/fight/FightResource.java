@@ -74,6 +74,17 @@ public class FightResource {
         return "Hello Fight Resource";
     }
 
+    @POST
+    @Path("/narrate")
+    @Consumes(APPLICATION_JSON)
+    @Produces(TEXT_PLAIN)
+    public Response narrateFight(@Valid Fight fight) {
+        logger.debug("Narrate the fight " + fight);
+        String narration = service.narrateFight(fight);
+        return Response.status(Response.Status.CREATED).entity(narration).build();
+    
+    }
+
     private void veryLongProcess() {
         try {
             Thread.sleep(tooManyMilliseconds);
